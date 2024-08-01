@@ -11,7 +11,7 @@ import {
   Autocomplete,
   IconButton
 } from "@mui/material";
-import CameraComponent from "./camera"
+import CameraComponent from "./CameraComponent"
 // import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import { firestore } from "@/firebase";
 import {
@@ -46,6 +46,7 @@ export default function Home() {
   const [itemName, setItemName] = useState("");
   const [inputValue, setInputValue] = useState("");
   const [filteredInventory, setFilteredInventory] = useState([]);
+
   // We'll add our component logic here
 
   const updateInventory = async () => {
@@ -117,8 +118,6 @@ export default function Home() {
       <Modal
         open={cameraOpen}
         onClose={handleCameraClose}
-        // aria-labelledby="modal-modal-title"
-        // aria-describedby="modal-modal-description"
       >
       <CameraComponent />
       </Modal>
