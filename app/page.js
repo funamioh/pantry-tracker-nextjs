@@ -1,8 +1,19 @@
-'use client'
+"use client";
 
-import { useState, useEffect } from 'react'
-import { Box, Stack, Typography, Button, Modal, TextField, Autocomplete } from '@mui/material'
-import { firestore } from '@/firebase'
+import { useState, useEffect } from "react";
+import {
+  Box,
+  Stack,
+  Typography,
+  Button,
+  Modal,
+  TextField,
+  Autocomplete,
+  IconButton
+} from "@mui/material";
+import CameraComponent from "./camera"
+// import CameraAltIcon from '@mui/icons-material/CameraAlt';
+import { firestore } from "@/firebase";
 import {
   collection,
   doc,
@@ -11,185 +22,204 @@ import {
   setDoc,
   deleteDoc,
   getDoc,
-} from 'firebase/firestore'
+} from "firebase/firestore";
 
 const style = {
-  position: 'absolute',
-  top: '50%',
-  left: '50%',
-  transform: 'translate(-50%, -50%)',
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
   width: 400,
-  bgcolor: 'white',
-  border: '2px solid #000',
+  bgcolor: "white",
+  border: "2px solid #000",
   boxShadow: 24,
   p: 4,
-  display: 'flex',
-  flexDirection: 'column',
+  display: "flex",
+  flexDirection: "column",
   gap: 3,
-}
+};
 
 export default function Home() {
-  const [inventory, setInventory] = useState([])
-  const [open, setOpen] = useState(false)
-  const [itemName, setItemName] = useState('')
-  const [inputValue, setInputValue] = useState('')
-  const [filteredInventory, setFilteredInventory] = useState([])
+  const [inventory, setInventory] = useState([]);
+  const [open, setOpen] = useState(false);
+  const [cameraOpen, setCameraOpen] = useState(false);
+  const [itemName, setItemName] = useState("");
+  const [inputValue, setInputValue] = useState("");
+  const [filteredInventory, setFilteredInventory] = useState([]);
   // We'll add our component logic here
 
   const updateInventory = async () => {
-    const snapshot = query(collection(firestore, 'inventory'))
-    const docs = await getDocs(snapshot)
-    const inventoryList = []
+    const snapshot = query(collection(firestore, "inventory"));
+    const docs = await getDocs(snapshot);
+    const inventoryList = [];
     docs.forEach((doc) => {
-      inventoryList.push({ name: doc.id, ...doc.data() })
-    })
-    setInventory(inventoryList)
+      inventoryList.push({ name: doc.id, ...doc.data() });
+    });
+    setInventory(inventoryList);
     console.log(inventoryList);
-  }
+  };
 
   useEffect(() => {
-    updateInventory()
-  }, [])
+    updateInventory();
+  }, []);
 
   // When a value is input to filter, shows only items that match input value
   useEffect(() => {
-    setFilteredInventory(inventory.filter(item => item.name.toLowerCase().includes(inputValue.toLowerCase())
-  ))
-  }, [inputValue, inventory])
-
+    setFilteredInventory(
+      inventory.filter((item) =>
+        item.name.toLowerCase().includes(inputValue.toLowerCase())
+      )
+    );
+  }, [inputValue, inventory]);
 
   const addItem = async (item) => {
-    const docRef = doc(collection(firestore, 'inventory'), item)
-    const docSnap = await getDoc(docRef)
+    const docRef = doc(collection(firestore, "inventory"), item);
+    const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
-      const { quantity } = docSnap.data()
-      await setDoc(docRef, { quantity: quantity + 1 })
+      const { quantity } = docSnap.data();
+      await setDoc(docRef, { quantity: quantity + 1 });
     } else {
-      await setDoc(docRef, { quantity: 1 })
+      await setDoc(docRef, { quantity: 1 });
     }
-    await updateInventory()
-  }
+    await updateInventory();
+  };
 
   const removeItem = async (item) => {
-    const docRef = doc(collection(firestore, 'inventory'), item)
-    const docSnap = await getDoc(docRef)
+    const docRef = doc(collection(firestore, "inventory"), item);
+    const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
-      const { quantity } = docSnap.data()
+      const { quantity } = docSnap.data();
       if (quantity === 1) {
-        await deleteDoc(docRef)
+        await deleteDoc(docRef);
       } else {
-        await setDoc(docRef, { quantity: quantity - 1 })
+        await setDoc(docRef, { quantity: quantity - 1 });
       }
     }
-    await updateInventory()
-  }
+    await updateInventory();
+  };
 
-  const handleOpen = () => setOpen(true)
-  const handleClose = () => setOpen(false)
+  const handleCameraOpen = () => setCameraOpen(true);
+  const handleCameraClose = () => setCameraOpen(false);
+
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
 
   return (
     <Box
-    width="100vw"
-    height="100vh"
-    display={'flex'}
-    justifyContent={'center'}
-    flexDirection={'column'}
-    alignItems={'center'}
-    gap={2}
-  >
-    <Modal
-      open={open}
-      onClose={handleClose}
-      aria-labelledby="modal-modal-title"
-      aria-describedby="modal-modal-description"
+      width="100vw"
+      height="100vh"
+      display={"flex"}
+      justifyContent={"center"}
+      flexDirection={"column"}
+      alignItems={"center"}
+      gap={2}
     >
-      <Box sx={style}>
-        <Typography id="modal-modal-title" variant="h6" component="h2">
-          Add Item
-        </Typography>
-        <Stack width="100%" direction={'row'} spacing={2}>
-          <TextField
-            id="outlined-basic"
-            label="Item"
-            variant="outlined"
-            fullWidth
-            value={itemName}
-            onChange={(e) => setItemName(e.target.value)}
-          />
-          <Button
-            variant="outlined"
-            onClick={() => {
-              addItem(itemName)
-              setItemName('')
-              handleClose()
-            }}
-          >
-            Add
-          </Button>
-        </Stack>
-      </Box>
-    </Modal>
-    <Box
-    width="800px"
-    display={'flex'}
-    justifyContent={'space-between'}
-    flexDirection={'row'}
-    alignItems={'center'}
-    gap={2}>
-    <Button variant="contained" onClick={handleOpen}>
-      Add New Item
-    </Button>
-    <Autocomplete
-    disablePortal
-    options={inventory.map(item => item.name)}
-    value={inputValue}
-    onInputChange={(event, newInputValue) => {
-      setInputValue(newInputValue)
-    }}
-    sx={{ width: 300 }}
-    renderInput={(params) => <TextField {...params} label="item" />}
-  />
-  </Box>
-    <Box border={'1px solid #333'}>
+      <Modal
+        open={cameraOpen}
+        onClose={handleCameraClose}
+        // aria-labelledby="modal-modal-title"
+        // aria-describedby="modal-modal-description"
+      >
+      <CameraComponent />
+      </Modal>
+      <Modal
+        open={open}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            Add Item
+          </Typography>
+          <Stack width="100%" direction={"row"} spacing={2}>
+            <TextField
+              id="outlined-basic"
+              label="Item"
+              variant="outlined"
+              fullWidth
+              value={itemName}
+              onChange={(e) => setItemName(e.target.value)}
+            />
+            <Button
+              variant="outlined"
+              onClick={() => {
+                addItem(itemName);
+                setItemName("");
+                handleClose();
+              }}
+            >
+              Add
+            </Button>
+          </Stack>
+        </Box>
+      </Modal>
       <Box
         width="800px"
-        height="100px"
-        bgcolor={'#ADD8E6'}
-        display={'flex'}
-        justifyContent={'center'}
-        alignItems={'center'}
+        display={"flex"}
+        justifyContent={"space-between"}
+        flexDirection={"row"}
+        alignItems={"center"}
+        gap={2}
       >
-        <Typography variant={'h2'} color={'#333'} textAlign={'center'}>
-          Inventory Items
-        </Typography>
+        <Button variant="contained" onClick={handleCameraOpen}>
+          Camera
+        </Button>
+        {/* <IconButton aria-label="camera">
+        <CameraAltIcon fontSize="inherit" />
+      </IconButton> */}
+        <Button variant="contained" onClick={handleOpen}>
+          Add New Item
+        </Button>
+        <Autocomplete
+          disablePortal
+          options={inventory.map((item) => item.name)}
+          value={inputValue}
+          onInputChange={(event, newInputValue) => {
+            setInputValue(newInputValue);
+          }}
+          sx={{ width: 300 }}
+          renderInput={(params) => <TextField {...params} label="item" />}
+        />
       </Box>
-      <Stack width="800px" height="300px" spacing={2} overflow={'auto'}>
-
-
-        {filteredInventory.map(({name, quantity}) => (
-          <Box
-            key={name}
-            width="100%"
-            minHeight="150px"
-            display={'flex'}
-            justifyContent={'space-between'}
-            alignItems={'center'}
-            bgcolor={'#f0f0f0'}
-            paddingX={5}
-          >
-            <Typography variant={'h3'} color={'#333'} textAlign={'center'}>
-              {name.charAt(0).toUpperCase() + name.slice(1)}
-            </Typography>
-            <Typography variant={'h3'} color={'#333'} textAlign={'center'}>
-              Quantity: {quantity}
-            </Typography>
-            <Button variant="contained" onClick={() => removeItem(name)}>
-              Remove
-            </Button>
-          </Box>
-        ))}
-      </Stack>
+      <Box border={"1px solid #333"}>
+        <Box
+          width="800px"
+          height="100px"
+          bgcolor={"#ADD8E6"}
+          display={"flex"}
+          justifyContent={"center"}
+          alignItems={"center"}
+        >
+          <Typography variant={"h2"} color={"#333"} textAlign={"center"}>
+            Inventory Items
+          </Typography>
+        </Box>
+        <Stack width="800px" height="300px" spacing={2} overflow={"auto"}>
+          {filteredInventory.map(({ name, quantity }) => (
+            <Box
+              key={name}
+              width="100%"
+              minHeight="150px"
+              display={"flex"}
+              justifyContent={"space-between"}
+              alignItems={"center"}
+              bgcolor={"#f0f0f0"}
+              paddingX={5}
+            >
+              <Typography variant={"h3"} color={"#333"} textAlign={"center"}>
+                {name.charAt(0).toUpperCase() + name.slice(1)}
+              </Typography>
+              <Typography variant={"h3"} color={"#333"} textAlign={"center"}>
+                Quantity: {quantity}
+              </Typography>
+              <Button variant="contained" onClick={() => removeItem(name)}>
+                Remove
+              </Button>
+            </Box>
+          ))}
+        </Stack>
+      </Box>
     </Box>
-  </Box>
-  )
+  );
 }
