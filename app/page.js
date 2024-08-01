@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Box, Stack, Typography, Button, Modal, TextField } from '@mui/material'
+import { Box, Stack, Typography, Button, Modal, TextField, Autocomplete } from '@mui/material'
 import { firestore } from '@/firebase'
 import {
   collection,
@@ -32,6 +32,8 @@ export default function Home() {
   const [inventory, setInventory] = useState([])
   const [open, setOpen] = useState(false)
   const [itemName, setItemName] = useState('')
+  const [inputValue, setInputValue] = useState('')
+  const [filteredInventory, setFilteredInventory] = useState([])
   // We'll add our component logic here
 
   const updateInventory = async () => {
@@ -42,11 +44,18 @@ export default function Home() {
       inventoryList.push({ name: doc.id, ...doc.data() })
     })
     setInventory(inventoryList)
+    console.log(inventoryList);
   }
 
   useEffect(() => {
     updateInventory()
   }, [])
+
+  // When a value is input to filter, shows only items that match input value
+  useEffect(() => {
+    setFilteredInventory(inventory.filter(item => item.name.toLowerCase().includes(inputValue.toLowerCase())
+  ))
+  }, [inputValue, inventory])
 
 
   const addItem = async (item) => {
@@ -120,9 +129,27 @@ export default function Home() {
         </Stack>
       </Box>
     </Modal>
+    <Box
+    width="800px"
+    display={'flex'}
+    justifyContent={'space-between'}
+    flexDirection={'row'}
+    alignItems={'center'}
+    gap={2}>
     <Button variant="contained" onClick={handleOpen}>
       Add New Item
     </Button>
+    <Autocomplete
+    disablePortal
+    options={inventory.map(item => item.name)}
+    value={inputValue}
+    onInputChange={(event, newInputValue) => {
+      setInputValue(newInputValue)
+    }}
+    sx={{ width: 300 }}
+    renderInput={(params) => <TextField {...params} label="item" />}
+  />
+  </Box>
     <Box border={'1px solid #333'}>
       <Box
         width="800px"
@@ -137,7 +164,9 @@ export default function Home() {
         </Typography>
       </Box>
       <Stack width="800px" height="300px" spacing={2} overflow={'auto'}>
-        {inventory.map(({name, quantity}) => (
+
+
+        {filteredInventory.map(({name, quantity}) => (
           <Box
             key={name}
             width="100%"
