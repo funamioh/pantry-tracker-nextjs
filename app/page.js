@@ -51,6 +51,9 @@ export default function Home() {
   const [filteredInventory, setFilteredInventory] = useState([]);
 
   const [edit, setEdit] = useState(false)
+  const [quantity, setQuantity] = useState(0);
+  const [count, setCount] = useState(quantity);
+  const [document, setDocument] = useState(null);
 
   // We'll add our component logic here
 
@@ -62,9 +65,14 @@ export default function Home() {
       inventoryList.push({ name: doc.id, ...doc.data() });
     });
     setInventory(inventoryList);
-    console.log(inventoryList);
+    console.log(inventoryList, "inventory list");
+    // setCount for each item in inventoryList
+    inventoryList.forEach((item) => {
+      setCount(item.quantity);
+    });
   };
 
+  // We should not do updateInventorty every time quantity changes. Because it fetches the quantity from firebase every time.
   useEffect(() => {
     updateInventory();
   }, []);
@@ -89,6 +97,11 @@ export default function Home() {
     }
     await updateInventory();
   };
+
+  // useEffect(() => {
+  //   setCount(quantity); // Update count whenever quantity changes
+  //   console.log(count, "count = quantity");
+  // }, [quantity]);
 
   const removeItem = async (item) => {
     const docRef = doc(collection(firestore, "inventory"), item);
@@ -216,40 +229,53 @@ export default function Home() {
               </Typography>
 
               {/* If edit btn is clicked, qty changes to editable form */}
-              {edit ? <Box
-        sx={{
-          display: 'flex',
-          alignItems: 'center',
-          gap: 2,
-          pt: 4,
-          mb: 2,
-          borderTop: '1px solid',
-          borderColor: 'background.level1',
-        }}
-      >
-        <Button
-          size="sm"
-          variant="outlined"
-          onClick={() => setCount((c) => c - 1)}
-        >
-          Decrement
-        </Button>
-        <Typography fontWeight="md" textColor="text.secondary">
-          {quantity}
-        </Typography>
-        <Button
-          size="sm"
-          variant="outlined"
-          onClick={() => setCount((c) => c + 1)}
-        >
-          Increment
-        </Button>
-      </Box> : <Typography variant={"h3"} color={"#333"} textAlign={"center"}>
-                Quantity: {quantity}
-              </Typography>}
-              {/* <Typography variant={"h3"} color={"#333"} textAlign={"center"}>
-                Quantity: {quantity}
-              </Typography> */}
+              {edit ? (
+                <Box
+                  sx={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: 2,
+                    pt: 4,
+                    mb: 2
+                  }}
+                >
+                  <Button
+                    size="sm"
+                    variant="outlined"
+                    onClick={() => setCount((q) => q - 1)}
+                  >
+                    Decrement
+                  </Button>
+                  <Typography fontWeight="md">{count}</Typography>
+                  <Button
+                    size="sm"
+                    variant="outlined"
+                    onClick={() => setCount((q) => q + 1)}
+                  >
+                    Increment
+                  </Button>
+                  <Button variant="outlined"
+                  onClick={async () => {
+                    setEdit(false);
+                    setQuantity(count);
+                    console.log(count, "count");
+                    try {
+                      const docRef = doc(collection(firestore, "inventory"), name);
+                      await setDoc(docRef, { quantity: count });
+                      await updateInventory();
+                    } catch (error) {
+                      console.error("Error updating document: ", error);
+                    }
+                  }}>
+
+                    Save
+                  </Button>
+                </Box>
+              ) : (
+                <Typography variant={"h3"} color={"#333"} textAlign={"center"}>
+                  Quantity: {quantity}
+                </Typography>
+              )}
               <Button variant="contained" onClick={() => setEdit(true)}>
                 Edit
               </Button>
