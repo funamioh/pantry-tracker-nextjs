@@ -5,26 +5,29 @@ import { Button, Box, Modal } from "@mui/material";
 const CameraComponent = forwardRef((props, ref) => {
   const camera = useRef(null);
   const [numberOfCameras, setNumberOfCameras] = useState(0);
-  const [image, setImage] = useState(null);
+  const imageRef = useRef(null);
+  // the following line is wrong
+  // const [image, setImage] = useState(null);
   const [open, setOpen] = useState(false)
 
   const handleTakePhoto = () => {
     if (camera.current) {
       const photo = camera.current.takePhoto();
       console.log("Photo taken:", photo); // display the photo taken
-      setImage(photo);
+      imageRef.current = photo;
+      console.log(imageRef.current, "image is here");
       setOpen(true)
     } else {
       console.log("Camera ref is null");
     }
   };
 
-  const handleClose = () => setOpen(false);
+  // const handleClose = () => setOpen(false);
 
   return (
     <div>
       <Camera ref={camera} numberOfCamerasCallback={setNumberOfCameras} />
-      {image && (
+      {imageRef.current && (
         <Box
         // width="100vw"
         // height="100vh"
@@ -35,12 +38,12 @@ const CameraComponent = forwardRef((props, ref) => {
         >
         <Modal
         open={open}
-        onClose={handleClose}
+        // onClose={handleClose}
       >
           <img
-            src={image}
+            src={imageRef.current}
             alt="Image preview"
-            // style={{ maxWidth: "100%", maxHeight: "100%" }}
+            style={{ maxWidth: "20%", maxHeight: "20%", border: "solid 1px black" }}
           />
           <Button variant="contained">
           <div>Save</div>
