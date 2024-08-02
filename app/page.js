@@ -1,11 +1,11 @@
 "use client";
 
-// Adding this didn't help
-// import React from 'react';
 import { useState, useEffect } from "react";
 import {
   Box,
+  Sheet,
   Stack,
+  Table,
   Typography,
   Button,
   Modal,
@@ -13,7 +13,12 @@ import {
   Autocomplete,
   IconButton
 } from "@mui/material";
+// the following line requires additional config. Will work on this later
+// import { DeleteIcon, EditIcon, AddCircleIcon, RemoveCircleIcon } from '@mui/icons-material';
 import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import AddCircleIcon from '@mui/icons-material/AddCircle';
+import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
 import CameraComponent from "./CameraComponent"
 // import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import { firestore } from "@/firebase";
@@ -133,6 +138,9 @@ export default function Home() {
       alignItems={"center"}
       gap={2}
     >
+      <Typography id="app-title" variant="h3" component="h3">
+            Pantry Tracker
+      </Typography>
       <Modal
         open={cameraOpen}
         onClose={handleCameraClose}
@@ -199,19 +207,52 @@ export default function Home() {
           renderInput={(params) => <TextField {...params} label="item" />}
         />
       </Box>
+      {/* <Sheet
+      variant="solid"
+      color="primary"
+      invertedColors
+      sx={{
+        pt: 1,
+        borderRadius: 'sm',
+        transition: '0.3s',
+        background: (theme) =>
+          `linear-gradient(45deg, ${theme.vars.palette.primary[500]}, ${theme.vars.palette.primary[400]})`,
+        '& tr:last-child': {
+          '& td:first-child': {
+            borderBottomLeftRadius: '8px',
+          },
+          '& td:last-child': {
+            borderBottomRightRadius: '8px',
+          },
+        },
+      }}
+    >
+      <Table stripe="odd" hoverRow>
+        <caption>Nutrition of your favorite menus.</caption>
+        <thead>
+          <tr>
+            <th style={{ width: '20%' }}>Item</th>
+            <th>Name</th>
+            <th>Quantity</th>
+            <th
+                aria-label="last"
+                style={{ width: 'var(--Table-lastColumnWidth)' }}
+              />
+          </tr>
+        </thead>
+        <tbody>
+          {filteredInventory.map(({name, quantity}) => (
+            <tr key={name}>
+              <td>{name}</td>
+              <td>{quantity}</td>
+              <td>{quantity}</td>
+            </tr>
+          ))}
+        </tbody>
+      </Table>
+    </Sheet> */}
+
       <Box border={"1px solid #333"}>
-        <Box
-          width="800px"
-          height="100px"
-          bgcolor={"#ADD8E6"}
-          display={"flex"}
-          justifyContent={"center"}
-          alignItems={"center"}
-        >
-          <Typography variant={"h2"} color={"#333"} textAlign={"center"}>
-            Inventory Items
-          </Typography>
-        </Box>
         <Stack width="800px" height="300px" spacing={2} overflow={"auto"}>
           {filteredInventory.map(({ name, quantity }) => (
             <Box
@@ -239,21 +280,15 @@ export default function Home() {
                     mb: 2
                   }}
                 >
-                  <Button
-                    size="sm"
-                    variant="outlined"
-                    onClick={() => setCount((q) => q - 1)}
-                  >
-                    Decrement
-                  </Button>
+                  <IconButton aria-label="plus" onClick={() => setCount((q) => q - 1)}>
+                  <RemoveCircleIcon />
+                  </IconButton >
+
                   <Typography fontWeight="md">{count}</Typography>
-                  <Button
-                    size="sm"
-                    variant="outlined"
-                    onClick={() => setCount((q) => q + 1)}
-                  >
-                    Increment
-                  </Button>
+                  <IconButton aria-label="plus" onClick={() => setCount((q) => q + 1)}>
+                  <AddCircleIcon />
+                  </IconButton >
+
                   <Button variant="outlined"
                   onClick={async () => {
                     setEdit(false);
@@ -276,16 +311,15 @@ export default function Home() {
                   Quantity: {quantity}
                 </Typography>
               )}
-              <Button variant="contained" onClick={() => setEdit(true)}>
-                Edit
-              </Button>
-              <Button variant="contained" onClick={() => removeItem(name)}>
-                Remove
-              </Button>
-              {/* mysterious error with iconButtons */}
-              {/* <IconButton aria-label="delete" onClick={() => removeItem(name)}>
+
+              <IconButton aria-label="edit" onClick={() => setEdit(true)}>
+              <EditIcon />
+              </IconButton>
+
+              {/* once the delete button is hit, modal pops up and confirm delete */}
+              <IconButton aria-label="delete" onClick={() => removeItem(name)}>
               <DeleteIcon />
-              </IconButton> */}
+              </IconButton>
             </Box>
           ))}
         </Stack>
