@@ -1,5 +1,7 @@
 "use client";
 
+// Adding this didn't help
+// import React from 'react';
 import { useState, useEffect } from "react";
 import {
   Box,
@@ -11,6 +13,7 @@ import {
   Autocomplete,
   IconButton
 } from "@mui/material";
+import DeleteIcon from '@mui/icons-material/Delete';
 import CameraComponent from "./CameraComponent"
 // import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import { firestore } from "@/firebase";
@@ -46,6 +49,8 @@ export default function Home() {
   const [itemName, setItemName] = useState("");
   const [inputValue, setInputValue] = useState("");
   const [filteredInventory, setFilteredInventory] = useState([]);
+
+  const [edit, setEdit] = useState(false)
 
   // We'll add our component logic here
 
@@ -209,12 +214,52 @@ export default function Home() {
               <Typography variant={"h3"} color={"#333"} textAlign={"center"}>
                 {name.charAt(0).toUpperCase() + name.slice(1)}
               </Typography>
-              <Typography variant={"h3"} color={"#333"} textAlign={"center"}>
+
+              {/* If edit btn is clicked, qty changes to editable form */}
+              {edit ? <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          gap: 2,
+          pt: 4,
+          mb: 2,
+          borderTop: '1px solid',
+          borderColor: 'background.level1',
+        }}
+      >
+        <Button
+          size="sm"
+          variant="outlined"
+          onClick={() => setCount((c) => c - 1)}
+        >
+          Decrement
+        </Button>
+        <Typography fontWeight="md" textColor="text.secondary">
+          {quantity}
+        </Typography>
+        <Button
+          size="sm"
+          variant="outlined"
+          onClick={() => setCount((c) => c + 1)}
+        >
+          Increment
+        </Button>
+      </Box> : <Typography variant={"h3"} color={"#333"} textAlign={"center"}>
                 Quantity: {quantity}
-              </Typography>
+              </Typography>}
+              {/* <Typography variant={"h3"} color={"#333"} textAlign={"center"}>
+                Quantity: {quantity}
+              </Typography> */}
+              <Button variant="contained" onClick={() => setEdit(true)}>
+                Edit
+              </Button>
               <Button variant="contained" onClick={() => removeItem(name)}>
                 Remove
               </Button>
+              {/* mysterious error with iconButtons */}
+              {/* <IconButton aria-label="delete" onClick={() => removeItem(name)}>
+              <DeleteIcon />
+              </IconButton> */}
             </Box>
           ))}
         </Stack>
