@@ -3,23 +3,27 @@
 import { useState, useEffect } from "react";
 import {
   Box,
-  Sheet,
   Stack,
-  Table,
   Typography,
   Button,
   Modal,
   TextField,
   Autocomplete,
-  IconButton
+  IconButton,
 } from "@mui/material";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
 // the following line requires additional config. Will work on this later
 // import { DeleteIcon, EditIcon, AddCircleIcon, RemoveCircleIcon } from '@mui/icons-material';
-import DeleteIcon from '@mui/icons-material/Delete';
-import EditIcon from '@mui/icons-material/Edit';
-import AddCircleIcon from '@mui/icons-material/AddCircle';
-import RemoveCircleIcon from '@mui/icons-material/RemoveCircle';
-import CameraComponent from "./CameraComponent"
+import DeleteIcon from "@mui/icons-material/Delete";
+import EditIcon from "@mui/icons-material/Edit";
+import AddCircleIcon from "@mui/icons-material/AddCircle";
+import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
+import CameraComponent from "./CameraComponent";
 // import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import { firestore } from "@/firebase";
 import {
@@ -55,7 +59,10 @@ export default function Home() {
   const [inputValue, setInputValue] = useState("");
   const [filteredInventory, setFilteredInventory] = useState([]);
 
-  const [edit, setEdit] = useState(false)
+  const [items, setItems] = useState([inventory]);
+  const [editItem, setEditItem] = useState(null);
+
+  const [edit, setEdit] = useState(false);
   const [quantity, setQuantity] = useState(0);
   const [count, setCount] = useState(quantity);
   const [document, setDocument] = useState(null);
@@ -139,13 +146,10 @@ export default function Home() {
       gap={2}
     >
       <Typography id="app-title" variant="h3" component="h3">
-            Pantry Tracker
+        Pantry Tracker
       </Typography>
-      <Modal
-        open={cameraOpen}
-        onClose={handleCameraClose}
-      >
-      <CameraComponent />
+      <Modal open={cameraOpen} onClose={handleCameraClose}>
+        <CameraComponent />
       </Modal>
       <Modal
         open={open}
@@ -207,88 +211,46 @@ export default function Home() {
           renderInput={(params) => <TextField {...params} label="item" />}
         />
       </Box>
-      {/* <Sheet
-      variant="solid"
-      color="primary"
-      invertedColors
-      sx={{
-        pt: 1,
-        borderRadius: 'sm',
-        transition: '0.3s',
-        background: (theme) =>
-          `linear-gradient(45deg, ${theme.vars.palette.primary[500]}, ${theme.vars.palette.primary[400]})`,
-        '& tr:last-child': {
-          '& td:first-child': {
-            borderBottomLeftRadius: '8px',
-          },
-          '& td:last-child': {
-            borderBottomRightRadius: '8px',
-          },
-        },
-      }}
-    >
-      <Table stripe="odd" hoverRow>
-        <caption>Nutrition of your favorite menus.</caption>
-        <thead>
-          <tr>
-            <th style={{ width: '20%' }}>Item</th>
-            <th>Name</th>
-            <th>Quantity</th>
-            <th
-                aria-label="last"
-                style={{ width: 'var(--Table-lastColumnWidth)' }}
-              />
-          </tr>
-        </thead>
-        <tbody>
-          {filteredInventory.map(({name, quantity}) => (
-            <tr key={name}>
-              <td>{name}</td>
-              <td>{quantity}</td>
-              <td>{quantity}</td>
-            </tr>
-          ))}
-        </tbody>
-      </Table>
-    </Sheet> */}
-
-      <Box border={"1px solid #333"}>
-        <Stack width="800px" height="300px" spacing={2} overflow={"auto"}>
-          {filteredInventory.map(({ name, quantity }) => (
-            <Box
-              key={name}
-              width="100%"
-              minHeight="150px"
-              display={"flex"}
-              justifyContent={"space-between"}
-              alignItems={"center"}
-              bgcolor={"#f0f0f0"}
-              paddingX={5}
-            >
-              <Typography variant={"h3"} color={"#333"} textAlign={"center"}>
-                {name.charAt(0).toUpperCase() + name.slice(1)}
-              </Typography>
-
-              {/* If edit btn is clicked, qty changes to editable form */}
-              {edit ? (
-                <Box
-                  sx={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: 2,
-                    pt: 4,
-                    mb: 2
-                  }}
+      <Box
+        width="80%"
+        display={"flex"}
+        sx={{ border: '2px solid grey', borderRadius: '4px', backgroundColor: '#85EA85' }}>
+      <TableContainer>
+        <Table sx={{ minWidth: 650 }} aria-label="simple table">
+          <TableHead>
+            <TableRow>
+              <TableCell>No.</TableCell>
+              <TableCell align="right">Name</TableCell>
+              <TableCell align="right">Quantity</TableCell>
+              <TableCell align="right">Action</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {filteredInventory.map(({ name, quantity }, index) => (
+              <TableRow
+                key={name}
+                sx={{ "&:last-child td, &:last-child th": { border: 0 } }}
+              >
+                <TableCell component="th" scope="row">
+                  {index + 1}
+                </TableCell>
+                <TableCell align="right">{name}</TableCell>
+                {/* 現状一つのアイテムが押されると全部editになってしまう。 */}
+                {editItem ? (
+                  <TableCell align="right">
+                    <IconButton
+                  aria-label="decrease"
+                  onClick={() => setCount((q) => q - 1)}
                 >
-                  <IconButton aria-label="plus" onClick={() => setCount((q) => q - 1)}>
                   <RemoveCircleIcon />
-                  </IconButton >
-
-                  <Typography fontWeight="md">{count}</Typography>
-                  <IconButton aria-label="plus" onClick={() => setCount((q) => q + 1)}>
-                  <AddCircleIcon />
-                  </IconButton >
-
+                </IconButton>
+                <Typography>{count}</Typography>
+                <IconButton
+                    aria-label="increase"
+                    onClick={() => setCount((q) => q + 1)}
+                  >
+                    <AddCircleIcon />
+                  </IconButton>
                   <Button variant="outlined"
                   onClick={async () => {
                     setEdit(false);
@@ -302,27 +264,34 @@ export default function Home() {
                       console.error("Error updating document: ", error);
                     }
                   }}>
-
                     Save
-                  </Button>
-                </Box>
-              ) : (
-                <Typography variant={"h3"} color={"#333"} textAlign={"center"}>
-                  Quantity: {quantity}
-                </Typography>
-              )}
+                  </Button></TableCell>
+                ) : (
+                  <TableCell align="right"><Typography>
+                {quantity}
+                </Typography></TableCell>
+                )}
 
-              <IconButton aria-label="edit" onClick={() => setEdit(true)}>
-              <EditIcon />
-              </IconButton>
+                <TableCell align="right">
+                  <IconButton aria-label="edit" onClick={() => {setEditItem(name);
+                        setCount(quantity); // Initialize count with current quantity
+                        }}>
+                    <EditIcon />
+                  </IconButton>
 
-              {/* once the delete button is hit, modal pops up and confirm delete */}
-              <IconButton aria-label="delete" onClick={() => removeItem(name)}>
-              <DeleteIcon />
-              </IconButton>
-            </Box>
-          ))}
-        </Stack>
+                  {/* once the delete button is hit, modal pops up and confirm delete */}
+                  <IconButton
+                    aria-label="delete"
+                    onClick={() => removeItem(name)}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
       </Box>
     </Box>
   );
