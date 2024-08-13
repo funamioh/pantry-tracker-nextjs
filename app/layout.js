@@ -1,11 +1,11 @@
 import { Inter } from "next/font/google";
 import {
   ClerkProvider,
-  SignInButton,
+  RedirectToSignIn,
   SignedIn,
   SignedOut,
-  UserButton
-} from '@clerk/nextjs'
+  UserButton,
+} from "@clerk/nextjs";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -20,15 +20,31 @@ export default function RootLayout({ children }) {
     <ClerkProvider>
       <html lang="en">
         <body>
-          <SignedOut>
-            <SignInButton />
-          </SignedOut>
-          <SignedIn>
-            <UserButton />
-          </SignedIn>
-          {children}
-        </body>
-      </html>
+        <SignedOut>
+              <RedirectToSignIn />
+            </SignedOut>
+            <SignedIn>
+              <Header />
+              {children}
+            </SignedIn>
+          </body>
+        </html>
     </ClerkProvider>
+  );
+}
+
+// Header component without the toggle button
+function Header() {
+
+  return (
+    <header
+      style={{
+        display: "flex",
+        justifyContent: "flex-end",
+        padding: "1rem",
+      }}
+    >
+      <UserButton />
+    </header>
   );
 }
