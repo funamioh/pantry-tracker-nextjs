@@ -235,8 +235,7 @@ export default function Home() {
                   {index + 1}
                 </TableCell>
                 <TableCell align="right">{name}</TableCell>
-                {/* 現状一つのアイテムが押されると全部editになってしまう。 */}
-                {editItem ? (
+                {editItem === name ? (
                   <TableCell align="right">
                     <IconButton
                   aria-label="decrease"
@@ -253,6 +252,7 @@ export default function Home() {
                   </IconButton>
                   <Button variant="outlined"
                   onClick={async () => {
+                    setEditItem(null);
                     setEdit(false);
                     setQuantity(count);
                     console.log(count, "count");
