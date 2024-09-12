@@ -54,6 +54,7 @@ const style = {
 export default function Home() {
   const [inventory, setInventory] = useState([]);
   const [open, setOpen] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
   const [cameraOpen, setCameraOpen] = useState(false);
   const [itemName, setItemName] = useState("");
   const [inputValue, setInputValue] = useState("");
@@ -98,6 +99,12 @@ export default function Home() {
     );
   }, [inputValue, inventory]);
 
+  useEffect(() => {
+    if (modalOpen) {
+      console.log("Modal is open now");
+    }
+  }, [modalOpen])
+
   const addItem = async (item) => {
     const docRef = doc(collection(firestore, "inventory"), item);
     const docSnap = await getDoc(docRef);
@@ -120,11 +127,7 @@ export default function Home() {
     const docSnap = await getDoc(docRef);
     if (docSnap.exists()) {
       const { quantity } = docSnap.data();
-      if (quantity === 1) {
-        await deleteDoc(docRef);
-      } else {
-        await setDoc(docRef, { quantity: quantity - 1 });
-      }
+      await deleteDoc(docRef);
     }
     await updateInventory();
   };
@@ -282,10 +285,46 @@ export default function Home() {
                   {/* once the delete button is hit, modal pops up and confirm delete */}
                   <IconButton
                     aria-label="delete"
-                    onClick={() => removeItem(name)}
+                    onClick={() => {
+                      setModalOpen(true);
+                      console.log(setModalOpen, "setModalOpen");
+                    }}
                   >
                     <DeleteIcon />
                   </IconButton>
+                  {modalOpen &&
+                  <Modal
+        open={modalOpen}
+        onClose={handleClose}
+        aria-labelledby="modal-modal-title"
+        aria-describedby="modal-modal-description"
+      >
+        <Box sx={style}>
+          <Typography id="modal-modal-title" variant="h6" component="h2">
+            Is it ok to delete this item?
+          </Typography>
+          <Stack width="100%" direction={"row"} spacing={2}>
+            <Button
+              variant="outlined"
+              onClick={() => {
+                removeItem(name);
+                setModalOpen(false);
+              }}
+            >
+              Yes
+            </Button>
+            <Button
+              variant="outlined"
+              onClick={() => {
+                setModalOpen(false);
+              }}
+            >
+              No
+            </Button>
+          </Stack>
+        </Box>
+      </Modal>
+      }
                 </TableCell>
               </TableRow>
             ))}
