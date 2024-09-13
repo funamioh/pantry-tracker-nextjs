@@ -17,14 +17,13 @@ import TableCell from "@mui/material/TableCell";
 import TableContainer from "@mui/material/TableContainer";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
-// the following line requires additional config. Will work on this later
-// import { DeleteIcon, EditIcon, AddCircleIcon, RemoveCircleIcon } from '@mui/icons-material';
 import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
 import CameraComponent from "./CameraComponent";
 // import CameraAltIcon from '@mui/icons-material/CameraAlt';
+import NavbarDemo from "../components/Header";
 import { firestore } from "@/firebase";
 import {
   collection,
@@ -139,6 +138,8 @@ export default function Home() {
   const handleClose = () => setOpen(false);
 
   return (
+    <>
+    <NavbarDemo />
     <Box
       width="100vw"
       height="100vh"
@@ -334,5 +335,6 @@ export default function Home() {
       </TableContainer>
       </Box>
     </Box>
+    </>
   );
 }
