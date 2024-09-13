@@ -222,10 +222,10 @@ export default function Home() {
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
             <TableRow>
-              <TableCell>No.</TableCell>
-              <TableCell align="right">Name</TableCell>
-              <TableCell align="right">Quantity</TableCell>
-              <TableCell align="right">Action</TableCell>
+              <TableCell sx={{ width:70 }}>No.</TableCell>
+              <TableCell align="center" sx={{ width:200 }}>Name</TableCell>
+              <TableCell align="center" sx={{ width:400 }}>Quantity</TableCell>
+              <TableCell align="center">Action</TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
@@ -237,9 +237,10 @@ export default function Home() {
                 <TableCell component="th" scope="row">
                   {index + 1}
                 </TableCell>
-                <TableCell align="right">{name}</TableCell>
+                <TableCell align="center">{name}</TableCell>
                 {editItem === name ? (
-                  <TableCell align="right">
+                  <TableCell align="center">
+                    <Stack direction="row" alignItems="center" spacing={2}>
                     <IconButton
                   aria-label="decrease"
                   onClick={() => setCount((q) => q - 1)}
@@ -268,14 +269,14 @@ export default function Home() {
                     }
                   }}>
                     Save
-                  </Button></TableCell>
+                  </Button></Stack></TableCell>
                 ) : (
-                  <TableCell align="right"><Typography>
+                  <TableCell align="center"><Typography>
                 {quantity}
                 </Typography></TableCell>
                 )}
 
-                <TableCell align="right">
+                <TableCell align="center">
                   <IconButton aria-label="edit" onClick={() => {setEditItem(name);
                         setCount(quantity); // Initialize count with current quantity
                         }}>
