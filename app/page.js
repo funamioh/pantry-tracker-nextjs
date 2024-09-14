@@ -14,6 +14,7 @@ import {
   TextField,
   Autocomplete,
   IconButton,
+  colors,
 } from "@mui/material";
 import Table from "@mui/material/Table";
 import TableBody from "@mui/material/TableBody";
@@ -53,6 +54,11 @@ const style = {
   display: "flex",
   flexDirection: "column",
   gap: 3,
+};
+
+const buttonColor = {
+  backgroundColor: "#36CA86",
+  colors: "FFFFFF",
 };
 
 export default function Home() {
@@ -178,7 +184,7 @@ export default function Home() {
               onChange={(e) => setItemName(e.target.value)}
             />
             <Button
-              variant="outlined"
+              style={buttonColor}
               onClick={() => {
                 addItem(itemName);
                 setItemName("");
@@ -198,13 +204,13 @@ export default function Home() {
         alignItems={"center"}
         gap={2}
       >
-        <Button variant="contained" onClick={handleCameraOpen}>
+        <Button style={buttonColor} onClick={handleCameraOpen}>
           Camera
         </Button>
         {/* <IconButton aria-label="camera">
         <CameraAltIcon fontSize="inherit" />
       </IconButton> */}
-        <Button variant="contained" onClick={handleOpen}>
+        <Button style={buttonColor} onClick={handleOpen}>
           Add New Item
         </Button>
         <Autocomplete
