@@ -1,6 +1,11 @@
 import React, { useState, useRef, forwardRef } from "react";
 import { Camera } from "react-camera-pro";
-import { Button, Box, Modal } from "@mui/material";
+import { Button, Box, Modal, buttonBaseClasses } from "@mui/material";
+
+const buttonColor = {
+  backgroundColor: "#36CA86",
+  colors: "FFFFFF",
+};
 
 const CameraComponent = forwardRef((props, ref) => {
   const camera = useRef(null);
@@ -45,20 +50,20 @@ const CameraComponent = forwardRef((props, ref) => {
             alt="Image preview"
             style={{ maxWidth: "20%", maxHeight: "20%", border: "solid 1px black" }}
           />
-          <Button variant="contained">
+          <Button style={buttonColor}>
           <div>Save</div>
         </Button>
         </Modal>
         </Box>
       )}
       <Box
-        height={"90vh"}
+        height={"45vh"}
         display={"flex"}
         justifyContent={"center"}
         // flexDirection={"column"}
         alignItems={"end"}
       >
-        <Button variant="contained" onClick={handleTakePhoto}>
+        <Button style={buttonColor} onClick={handleTakePhoto}>
           <div>Take a photo</div>
         </Button>
       </Box>

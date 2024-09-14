@@ -56,6 +56,21 @@ const style = {
   gap: 3,
 };
 
+const cameraStyle = {
+  position: "absolute",
+  top: "50%",
+  left: "50%",
+  transform: "translate(-50%, -50%)",
+  width: 400,
+  bgcolor: "white",
+  border: "2px solid #000",
+  boxShadow: 24,
+  p: 4,
+  display: "flex",
+  flexDirection: "column",
+  gap: 3,
+}
+
 const buttonColor = {
   backgroundColor: "#36CA86",
   colors: "FFFFFF",
@@ -161,7 +176,7 @@ export default function Home() {
       style={{ backgroundColor: '#F5F5DC' }}
       gap={2}
     >
-      <Modal open={cameraOpen} onClose={handleCameraClose}>
+      <Modal style={cameraStyle} open={cameraOpen} onClose={handleCameraClose}>
         <CameraComponent />
       </Modal>
       <Modal
