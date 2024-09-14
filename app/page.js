@@ -26,7 +26,7 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import AddCircleIcon from "@mui/icons-material/AddCircle";
 import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
-import CameraComponent from "./CameraComponent";
+import CameraComponent from "../components/CameraComponent";
 // import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import NavbarDemo from "../components/Header";
 import Footer from "../components/Footer";
