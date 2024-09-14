@@ -23,7 +23,7 @@ export default function Footer() {
         <ul className="flex flex-wrap justify-center space-x-4 my-4">
           <li>
             <Link
-              href="https://www.linkedin.com/company/novacopy-ai/"
+              href="https://www.linkedin.com/in/miho-funayama-653b391b4/"
               legacyBehavior
             >
               <a
@@ -38,36 +38,23 @@ export default function Footer() {
             </Link>
           </li>
           <li>
-            <Link href="https://www.instagram.com/novacopyai/" legacyBehavior>
-              <a
-                target="_blank"
-                rel="noopener noreferrer"
-                className="text-white hover:text-pink-300 transition"
-                title="Instagram"
-              >
-                <i className="fab fa-instagram fa-2x"></i>
-                <span className="sr-only">Instagram</span>
-              </a>
-            </Link>
-          </li>
-          <li>
             <Link
-              href="https://www.facebook.com/people/NovaCopy-AI/61564479223799/"
+              href="https://github.com/funamioh"
               legacyBehavior
             >
               <a
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-white hover:text-pink-300 transition"
-                title="Facebook"
+                title="GitHub"
               >
-                <i className="fab fa-facebook fa-2x"></i>
-                <span className="sr-only">Facebook</span>
+                <i className="fab fa-github fa-2x"></i>
+                <span className="sr-only">GitHub</span>
               </a>
             </Link>
           </li>
           <li>
-            <Link href="mailto:novacopyai14@gmail.com" legacyBehavior>
+            <Link href="mailto:miho.funayama.tech@gmail.com" legacyBehavior>
               <a
                 className="text-white hover:text-pink-300 transition"
                 title="Email"

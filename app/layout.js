@@ -7,6 +7,7 @@ import {
   UserButton,
 } from "@clerk/nextjs";
 import "./globals.css";
+import "@fortawesome/fontawesome-free/css/all.min.css";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -30,21 +31,5 @@ export default function RootLayout({ children }) {
           </body>
         </html>
     </ClerkProvider>
-  );
-}
-
-// Header component without the toggle button
-function Header() {
-
-  return (
-    <header
-      style={{
-        display: "flex",
-        justifyContent: "flex-end",
-        padding: "1rem",
-      }}
-    >
-      <UserButton />
-    </header>
   );
 }
