@@ -24,7 +24,7 @@ export default function RootLayout({ children }) {
               <RedirectToSignIn />
             </SignedOut>
             <SignedIn>
-              <Header />
+              {/* <Header /> */}
               {children}
             </SignedIn>
           </body>

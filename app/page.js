@@ -1,5 +1,9 @@
 "use client";
 
+import 'flowbite/dist/flowbite.min.js';
+import 'flowbite/dist/flowbite.css';
+import './globals.css';
+
 import { useState, useEffect } from "react";
 import {
   Box,
@@ -24,6 +28,7 @@ import RemoveCircleIcon from "@mui/icons-material/RemoveCircle";
 import CameraComponent from "./CameraComponent";
 // import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import NavbarDemo from "../components/Header";
+import Footer from "../components/Footer";
 import { firestore } from "@/firebase";
 import {
   collection,
@@ -149,9 +154,6 @@ export default function Home() {
       alignItems={"center"}
       gap={2}
     >
-      <Typography id="app-title" variant="h3" component="h3">
-        Pantry Tracker
-      </Typography>
       <Modal open={cameraOpen} onClose={handleCameraClose}>
         <CameraComponent />
       </Modal>
@@ -335,6 +337,7 @@ export default function Home() {
       </TableContainer>
       </Box>
     </Box>
+    <Footer />
     </>
   );
 }
