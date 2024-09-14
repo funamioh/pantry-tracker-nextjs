@@ -143,15 +143,16 @@ export default function Home() {
   const handleClose = () => setOpen(false);
 
   return (
-    <>
+    <Box height="100vh">
     <NavbarDemo />
     <Box
       width="100vw"
-      height="100vh"
+      paddingY={5}
       display={"flex"}
       justifyContent={"center"}
       flexDirection={"column"}
       alignItems={"center"}
+      style={{ backgroundColor: '#F5F5DC' }}
       gap={2}
     >
       <Modal open={cameraOpen} onClose={handleCameraClose}>
@@ -220,7 +221,7 @@ export default function Home() {
       <Box
         width="80%"
         display={"flex"}
-        sx={{ border: '2px solid grey', borderRadius: '4px', backgroundColor: '#85EA85' }}>
+        sx={{ border: '2px solid grey', borderRadius: '4px', backgroundColor: '#F5F5DC' }}>
       <TableContainer>
         <Table sx={{ minWidth: 650 }} aria-label="simple table">
           <TableHead>
@@ -338,6 +339,6 @@ export default function Home() {
       </Box>
     </Box>
     <Footer />
-    </>
+    </Box>
   );
 }
