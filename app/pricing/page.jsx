@@ -33,7 +33,7 @@ export default function Pricing() {
   return (
     <Box height="100vh">
     <NavbarDemo />
-    <section class="bg-white dark:bg-gray-900">
+    <section style={{ backgroundColor: '#F5F5DC' }}>
   <div class="py-8 px-4 mx-auto max-w-screen-xl lg:py-16 lg:px-6">
       <div class="mx-auto max-w-screen-md text-center mb-8 lg:mb-12">
       <h2 class="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">Tailored Plans for Your Kitchen Needs</h2>
